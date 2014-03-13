@@ -1,0 +1,26 @@
+.country {
+fill: #b8b8b8;
+stroke: #fff;
+stroke-width: .5px;
+stroke-linejoin: round;
+}
+
+.graticule {
+fill: none;
+stroke: #000;
+stroke-opacity: .3;
+stroke-width: .5px;
+}
+
+.graticule-outline {
+fill: none;
+stroke: #333;
+stroke-width: 1.5px;
+}
+
+text {
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 18px;
+font-weight: bold;
+text-anchor: middle;
+}
