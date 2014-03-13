@@ -51,8 +51,8 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         .data(countries)
         .enter().insert("path", ".graticule")
         .attr("class", "country")
-        .attr("d", path);
-
+        .attr("d", path)
+        .on('click', clicked);
     step();
 
     function step() {
@@ -79,6 +79,13 @@ d3.json("data/readme-world-110m.json", function(error, world) {
             .each("end", step);
     }
 });
+
+//-------------------------------------------------------------------------------
+// State click callback:
+function clicked(d) {
+    console.log('clicked on:' + d.id);
+
+}
 
 //-------------------------------------------------------------------------------
 // Interpolator Class:
