@@ -17,28 +17,37 @@ var path = d3.geo.path()
 var graticule = d3.geo.graticule()
     .extent([[-180, -90], [180 - .1, 90 - .1]]);
 
+var rotate = d3_geo_greatArcInterpolator();
+
+var zoom = d3.behavior.zoom()
+    .translate(projection.translate())
+    .scale(projection.scale)
+
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-var line = svg.append("path")
+var g = svg.append("g");
+
+var line = g.append("path")
     .datum(graticule)
     .attr("class", "graticule")
     .attr("d", path);
 
-svg.append("circle")
+var earth = g.append("circle")
     .attr("class", "graticule-outline")
     .attr("cx", width / 2)
     .attr("cy", height / 2)
     .attr("r", projection.scale());
 
-var title = svg.append("text")
+var title = g.append("text")
     .attr("x", width / 2)
     .attr("y", height * 3 / 5);
 
 var d3_radians = Math.PI / 180;
 
-var rotate = d3_geo_greatArcInterpolator();
+var automaticMode = 0;
+var centered;
 
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
@@ -47,13 +56,17 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         i = -1,
         n = countries.length;
 
-    var country = svg.selectAll(".country")
+    var country = g.selectAll(".country")
         .data(countries)
         .enter().insert("path", ".graticule")
         .attr("class", "country")
         .attr("d", path)
-        .on('click', clicked);
-    //step();
+        .on('click', countryFocus)
+        .on('dblclick', countryFocusAndDetails);
+
+    if(automaticMode) {
+        step();
+    }
 
 //-------------------------------------------------------------------------------
 // Step Loop function:
@@ -80,9 +93,10 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         .transition()
             .each("end", step);
     }
+
 //-------------------------------------------------------------------------------
-// State click callback:
-    function clicked(c) {
+// Country click to Focus callback:
+    function countryFocus(c) {
         console.log('clicked on:' + c.id);
         
         title.text(c.id);
@@ -99,14 +113,48 @@ d3.json("data/readme-world-110m.json", function(error, world) {
             .delay(250)
             .duration(1250)
             .tween('rotate', function() {
-            var point = centroid(c);
-            rotate.source(projection.rotate()).target([-point[0], -point[1]]).distance();
-            return function(t) {
-                    projection.rotate(rotate(t));
-                    country.attr('d', path);
-                    line.attr('d', path);
-                };
+                var point = centroid(c);
+                rotate.source(projection.rotate()).target([-point[0], -point[1]]).distance();
+                return function(t) {
+                        projection.rotate(rotate(t));
+                        country.attr('d', path);
+                        line.attr('d', path);
+                    };
             });
+    }
+
+//-------------------------------------------------------------------------------
+// Country double click to Focus and show details callback:
+    function countryFocusAndDetails(c) {
+        // Focus:
+        countryFocus(c);
+        
+        // Zoom:
+        console.log('zooming...');
+        var x, y, k;
+        if(c && centered != c) {
+            var point = centroid(c);
+            //x = point[0];
+            //y = point[1];
+            x = width / 2;
+            y = height / 2;
+            k = 4;
+            centered = c;
+        } else {
+            x = width  / 2;
+            y = height / 2;
+            k = 1;
+            centered = null;
+        }
+        g.selectAll("path")
+            .classed("active", centered && function(d) { return d === centered; });
+
+        g.transition()
+            .duration(750)
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + 
+                                ")scale(" + k + 
+                                ")translate(" + -x + "," + -y + ")")
+            .style("stroke-width", 1.5 / k + "px");
     }
 });
 
