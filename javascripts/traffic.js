@@ -84,6 +84,17 @@ d3.json("data/readme-world-110m.json", function(error, world) {
 // State click callback:
     function clicked(c) {
         console.log('clicked on:' + c.id);
+        
+        title.text(c.id);
+
+        country.transition()
+            .style('fill', function(d, j) {
+                if(countries[j].id == c.id) {
+                    return 'red';
+                }
+                return '#b8b8b8';
+            });
+
         d3.transition()
             .delay(250)
             .duration(1250)
