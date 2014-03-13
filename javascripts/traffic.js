@@ -3,6 +3,8 @@
 var width = 960,
     height = 500;
 
+//-------------------------------------------------------------------------------
+// World Map globals:
 var centroid = d3.geo.path()
     .projection(function(d) { return d; })
     .centroid;
@@ -17,18 +19,20 @@ var path = d3.geo.path()
 var graticule = d3.geo.graticule()
     .extent([[-180, -90], [180 - .1, 90 - .1]]);
 
+//-------------------------------------------------------------------------------
+// Motion Globals:
 var rotate = d3_geo_greatArcInterpolator();
 
-var zoom = d3.behavior.zoom()
-    .translate(projection.translate())
-    .scale(projection.scale)
-
+//-------------------------------------------------------------------------------
+// Graph and SVG objects:
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
 var g = svg.append("g");
 
+//-------------------------------------------------------------------------------
+// Single Objects:
 var line = g.append("path")
     .datum(graticule)
     .attr("class", "graticule")
@@ -43,6 +47,19 @@ var earth = g.append("circle")
 var title = g.append("text")
     .attr("x", width / 2)
     .attr("y", height * 3 / 5);
+
+var pieRadius = 100;
+var arc = d3.svg.arc()
+    .outerRadius(pieRadius - 10)
+    .innerRadius(pieRadius - 70);
+
+var pie = d3.layout.pie()
+    .sort(null)
+    .value(function(d) { return d.apples; });
+
+//-------------------------------------------------------------------------------
+// Utility Globals:
+var color = d3.scale.category20();
 
 var d3_radians = Math.PI / 180;
 
