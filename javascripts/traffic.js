@@ -53,8 +53,10 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         .attr("class", "country")
         .attr("d", path)
         .on('click', clicked);
-    step();
+    //step();
 
+//-------------------------------------------------------------------------------
+// Step Loop function:
     function step() {
         if (++i >= n) i = 0;
 
@@ -78,14 +80,24 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         .transition()
             .each("end", step);
     }
-});
-
 //-------------------------------------------------------------------------------
 // State click callback:
-function clicked(d) {
-    console.log('clicked on:' + d.id);
-
-}
+    function clicked(c) {
+        console.log('clicked on:' + c.id);
+        d3.transition()
+            .delay(250)
+            .duration(1250)
+            .tween('rotate', function() {
+            var point = centroid(c);
+            rotate.source(projection.rotate()).target([-point[0], -point[1]]).distance();
+            return function(t) {
+                    projection.rotate(rotate(t));
+                    country.attr('d', path);
+                    line.attr('d', path);
+                };
+            });
+    }
+});
 
 //-------------------------------------------------------------------------------
 // Interpolator Class:
