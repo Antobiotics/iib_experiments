@@ -52,12 +52,13 @@ var title = g.append("text")
 var pieRadius = 100;
 var pieChart = undefined;
 
-
+// TODO: Adapt for real data
 function type(d) {
   d.apples = +d.apples || 0;
   d.oranges = +d.oranges || 0;
   return d;
 }
+
 //-------------------------------------------------------------------------------
 // Utility Globals:
 var color = d3.scale.category20();
@@ -70,9 +71,10 @@ var centered;
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
 d3.json("data/readme-world-110m.json", function(error, world) {
-    var countries = topojson.object(world, world.objects.countries).geometries,
-        i = -1,
-        n = countries.length;
+
+    var zoomFactor = 1;
+    // Loading the Map:
+    var countries = topojson.object(world, world.objects.countries).geometries;
 
     var country = g.selectAll(".country")
         .data(countries)
@@ -81,36 +83,6 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         .attr("d", path)
         .on('click', countryFocus)
         .on('dblclick', countryFocusAndDetails);
-
-    if(automaticMode) {
-        step();
-    }
-
-//-------------------------------------------------------------------------------
-// Step Loop function:
-    function step() {
-        if (++i >= n) i = 0;
-
-        title.text(countries[i].id);
-
-        country.transition()
-            .style("fill", function(d, j) { return j === i ? "red" : "#b8b8b8"; });
-
-        d3.transition()
-            .delay(250)
-            .duration(1250)
-            .tween("rotate", function() {
-            var point = centroid(countries[i]);
-            rotate.source(projection.rotate()).target([-point[0], -point[1]]).distance();
-            return function(t) {
-                projection.rotate(rotate(t));
-                country.attr("d", path);
-                line.attr("d", path);
-            };
-            })
-        .transition()
-            .each("end", step);
-    }
 
 //-------------------------------------------------------------------------------
 // Country click to Focus callback:
@@ -153,18 +125,18 @@ d3.json("data/readme-world-110m.json", function(error, world) {
 
         // Zoom:
         console.log('zooming...');
-        var x, y, k;
+        var x, y;
         var point;
         if(c && centered != c) {
             point = centroid(c);
             x = width / 2;
             y = height / 2;
-            k = 4;
+            zoomFactor = 4;
             centered = c;
         } else {
             x = width  / 2;
             y = height / 2;
-            k = 1;
+            zoomFactor = 1;
             centered = null;
         }
         g.selectAll("path")
@@ -173,38 +145,43 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         g.transition()
             .duration(750)
             .attr("transform", "translate(" + width / 2 + "," + height / 2 +
-                                ")scale(" + k +
+                                ")scale(" + zoomFactor +
                                 ")translate(" + -x + "," + -y + ")")
-            .style("stroke-width", 1.5 / k + "px")
-            .each("end", function(c) {
-                // Show details: a Pie chart of fake data for now
-                if(centered) {
-                    var pie = d3.layout.pie()
-                                .value(function(d) { return d.apples; })
-                                .sort(null);
-
-                    var arc = d3.svg.arc()
-                                .innerRadius(0)
-                                .outerRadius(pieRadius / k);
-
-                    d3.csv("data/fake_data.csv", type, function(error, data) {
-                        console.log(data);
-                        pieChart = g.datum(data).selectAll("path.arc")
-                                        .data(pie)
-                                        .enter()
-                                        .append("path")
-                                        .attr("class", "pie-arc")
-                                        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-                                        .attr("fill", function(d, i) { return color(i); })
-                                        .attr("d", arc)
-                                        .each(function(d) { this._current = d; });
-                        pieChart.transition().delay(250).duration(100).style("opacity", "1");
-                    });
-                }
-            });
+            .style("stroke-width", 1.5 / zoomFactor + "px")
+            .each("end", managePieTransitions);
 
     }
-});
+
+//-------------------------------------------------------------------------------
+// Interpolator Class:
+    function managePieTransitions(c) {
+        // Show details: a Pie chart of fake data for now
+        if(centered) {
+            var pie = d3.layout.pie()
+                        .value(function(d) { return d.apples; })
+                        .sort(null);
+
+            var arc = d3.svg.arc()
+                        .innerRadius(0)
+                        .outerRadius(pieRadius / zoomFactor);
+
+            d3.csv("data/fake_data.csv", type, function(error, data) {
+                console.log(data);
+                pieChart = g.datum(data).selectAll("path.arc")
+                                .data(pie)
+                                .enter()
+                                .append("path")
+                                .attr("class", "pie-arc")
+                                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+                                .attr("fill", function(d, i) { return color(i); })
+                                .attr("d", arc)
+                                .each(function(d) { this._current = d; });
+                pieChart.transition().delay(250).duration(100).style("opacity", "1");
+            });
+        }
+    }
+
+}); // Main End
 
 //-------------------------------------------------------------------------------
 // Interpolator Class:
