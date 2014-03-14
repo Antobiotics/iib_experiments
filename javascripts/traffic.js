@@ -59,20 +59,26 @@ function type(d) {
   return d;
 }
 
+function typeHT(d) {
+  return d;
+}
 //-------------------------------------------------------------------------------
 // Utility Globals:
-var color = d3.scale.category20();
+var color = d3.scale.category10();
 
 var d3_radians = Math.PI / 180;
 
 var automaticMode = 0;
 var centered;
-
+    var div = d3.select('body').append('div')
+                               .attr('class', 'tooltip')
+                               .style('opacity', 0);
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
 d3.json("data/readme-world-110m.json", function(error, world) {
 
     var zoomFactor = 1;
+    
     // Loading the Map:
     var countries = topojson.object(world, world.objects.countries).geometries;
 
@@ -82,7 +88,67 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         .attr("class", "country")
         .attr("d", path)
         .on('click', countryFocus)
-        .on('dblclick', countryFocusAndDetails);
+        .on('dblclick', countryFocusAndDetails)
+        .on('mouseover', openCountryDescription)
+        .on('mouseout', closeCountryDescription);
+    
+    heatMap();
+
+
+    function heatMap() {
+        d3.csv("data/global.csv", typeHT, function(error, data) {
+                console.log(data);
+                country.transition()
+                       .style('fill', 'red')
+                       .style('fill-opacity',function(d, j) { 
+                                    console.log(d.country + d.total);
+                                    for(var dataI = 0; dataI < data.length; dataI++) {
+                                        if(data[dataI].country == countries[j].id) {
+                                            console.log(data[dataI].country + " " + countries[j].id);
+                                            var opacity = d3.scale.linear()
+                                                            .domain([0, 835])
+                                                            .range([0.4, 1]);
+                                            return opacity(data[dataI].total);
+                                        }
+                                    }
+                                    return 0.4;
+                                });
+        });
+    }
+    
+    var tooltipLine;
+    function openCountryDescription(c) {
+        tooltipLine = g.append('line')
+                        .style('stroke', 'black')
+                        .attr('x1', path.centroid(c)[0])
+                        .attr('y1', path.centroid(c)[1])
+                        .attr('x2', 780)
+                        .attr('y2', 20);
+        tooltipLine.transition()
+                   .duration(100)
+                   .style('opacity', 0.9);
+
+        g.append('foreignObject')
+            .attr('width', 300)
+            .attr('heigh', 100)
+            .append('xhtml:body')
+            .html("<h1>An HTML Foreign Object in SVG</h1><p>");
+        /*
+        div.transition()
+            .duration(200)
+            .style('opacity', .9);
+
+        div.html(formatTime('blah' + '<br/>')
+            .style('left', (300) + 'px')
+            .style('top', (300 - 28) + 'px'));
+            */
+    }
+
+    function closeCountryDescription(c) {
+        tooltipLine.transition()
+                   .duration(500)
+                   .style('opacity', 0);
+    }
 
 //-------------------------------------------------------------------------------
 // Country click to Focus callback:
@@ -105,10 +171,13 @@ d3.json("data/readme-world-110m.json", function(error, world) {
             .tween('rotate', function() {
                 var point = centroid(c);
                 rotate.source(projection.rotate()).target([-point[0], -point[1]]).distance();
+                
                 return function(t) {
                         projection.rotate(rotate(t));
                         country.attr('d', path);
                         line.attr('d', path);
+                        tooltipLine.attr('x1', path.centroid(c)[0])
+                                   .attr('y1', path.centroid(c)[1]);
                     };
             });
     }
