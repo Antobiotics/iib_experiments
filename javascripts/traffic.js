@@ -49,7 +49,7 @@ var title = g.append("text")
     .attr("x", width / 2)
     .attr("y", height * 3 / 5);
 
-var pieRadius = 300;
+var pieRadius = 100;
 
 
 
@@ -79,35 +79,13 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         .enter().insert("path", ".graticule")
         .attr("class", "country")
         .attr("d", path)
-        .on('click', testPie)
+        .on('click', countryFocus)
         .on('dblclick', countryFocusAndDetails);
 
     if(automaticMode) {
         step();
     }
-    function testPie() {
-        console.log("Pie test on Pi day");
-        // Show details: a Pie chart of fake data for now
-        var pie = d3.layout.pie()
-                    .value(function(d) { return d.apples; })
-                    .sort(null);
 
-        var arc = d3.svg.arc()
-                    .innerRadius(pieRadius)
-                    .outerRadius(0);
-
-        d3.csv("data/fake_data.csv", type, function(error, data) {
-            console.log(data);
-            var circle = g.datum(data).selectAll("path.arc")
-                            .data(pie)
-                            .enter()
-                            .append("path")
-                            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-                            .attr("fill", function(d, i) { return color(i); })
-                            .attr("d", arc)
-                            .each(function(d) { this._current = d; });
-        });
-    }
 //-------------------------------------------------------------------------------
 // Step Loop function:
     function step() {
@@ -194,8 +172,29 @@ d3.json("data/readme-world-110m.json", function(error, world) {
             .attr("transform", "translate(" + width / 2 + "," + height / 2 +
                                 ")scale(" + k +
                                 ")translate(" + -x + "," + -y + ")")
-            .style("stroke-width", 1.5 / k + "px");
+            .style("stroke-width", 1.5 / k + "px")
+            .each("end", function(c) {
+                // Show details: a Pie chart of fake data for now
+                var pie = d3.layout.pie()
+                            .value(function(d) { return d.apples; })
+                            .sort(null);
 
+                var arc = d3.svg.arc()
+                            .innerRadius(pieRadius)
+                            .outerRadius(0);
+
+                d3.csv("data/fake_data.csv", type, function(error, data) {
+                    console.log(data);
+                    var circle = g.datum(data).selectAll("path.arc")
+                                    .data(pie)
+                                    .enter()
+                                    .append("path")
+                                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+                                    .attr("fill", function(d, i) { return color(i); })
+                                    .attr("d", arc)
+                                    .each(function(d) { this._current = d; });
+                });
+            });
 
     }
 });
