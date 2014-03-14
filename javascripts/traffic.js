@@ -13,6 +13,7 @@ var projection = d3.geo.orthographic()
     .scale(248)
     .clipAngle(90);
 
+// The borders: ?
 var path = d3.geo.path()
     .projection(projection);
 
@@ -48,15 +49,15 @@ var title = g.append("text")
     .attr("x", width / 2)
     .attr("y", height * 3 / 5);
 
-var pieRadius = 100;
-var arc = d3.svg.arc()
-    .outerRadius(pieRadius - 10)
-    .innerRadius(pieRadius - 70);
+var pieRadius = 300;
 
-var pie = d3.layout.pie()
-    .sort(null)
-    .value(function(d) { return d.apples; });
 
+
+function type(d) {
+  d.apples = +d.apples || 0;
+  d.oranges = +d.oranges || 0;
+  return d;
+}
 //-------------------------------------------------------------------------------
 // Utility Globals:
 var color = d3.scale.category20();
@@ -78,13 +79,35 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         .enter().insert("path", ".graticule")
         .attr("class", "country")
         .attr("d", path)
-        .on('click', countryFocus)
+        .on('click', testPie)
         .on('dblclick', countryFocusAndDetails);
 
     if(automaticMode) {
         step();
     }
+    function testPie() {
+        console.log("Pie test on Pi day");
+        // Show details: a Pie chart of fake data for now
+        var pie = d3.layout.pie()
+                    .value(function(d) { return d.apples; })
+                    .sort(null);
 
+        var arc = d3.svg.arc()
+                    .innerRadius(pieRadius)
+                    .outerRadius(0);
+
+        d3.csv("data/fake_data.csv", type, function(error, data) {
+            console.log(data);
+            var circle = g.datum(data).selectAll("path.arc")
+                            .data(pie)
+                            .enter()
+                            .append("path")
+                            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+                            .attr("fill", function(d, i) { return color(i); })
+                            .attr("d", arc)
+                            .each(function(d) { this._current = d; });
+        });
+    }
 //-------------------------------------------------------------------------------
 // Step Loop function:
     function step() {
@@ -115,7 +138,7 @@ d3.json("data/readme-world-110m.json", function(error, world) {
 // Country click to Focus callback:
     function countryFocus(c) {
         console.log('clicked on:' + c.id);
-        
+
         title.text(c.id);
 
         country.transition()
@@ -145,7 +168,7 @@ d3.json("data/readme-world-110m.json", function(error, world) {
     function countryFocusAndDetails(c) {
         // Focus:
         countryFocus(c);
-        
+
         // Zoom:
         console.log('zooming...');
         var x, y, k;
@@ -168,10 +191,12 @@ d3.json("data/readme-world-110m.json", function(error, world) {
 
         g.transition()
             .duration(750)
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 + 
-                                ")scale(" + k + 
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 +
+                                ")scale(" + k +
                                 ")translate(" + -x + "," + -y + ")")
             .style("stroke-width", 1.5 / k + "px");
+
+
     }
 });
 
