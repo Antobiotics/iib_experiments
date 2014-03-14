@@ -50,7 +50,7 @@ var title = g.append("text")
     .attr("y", height * 3 / 5);
 
 var pieRadius = 100;
-
+var pieChart = undefined;
 
 
 function type(d) {
@@ -145,15 +145,18 @@ d3.json("data/readme-world-110m.json", function(error, world) {
 // Country double click to Focus and show details callback:
     function countryFocusAndDetails(c) {
         // Focus:
+        if(pieChart != undefined) {
+            g.selectAll(".pie-arc").transition().style("opacity", "0");
+            pieChart = undefined;
+        }
         countryFocus(c);
 
         // Zoom:
         console.log('zooming...');
         var x, y, k;
+        var point;
         if(c && centered != c) {
-            var point = centroid(c);
-            //x = point[0];
-            //y = point[1];
+            point = centroid(c);
             x = width / 2;
             y = height / 2;
             k = 4;
@@ -186,14 +189,16 @@ d3.json("data/readme-world-110m.json", function(error, world) {
 
                     d3.csv("data/fake_data.csv", type, function(error, data) {
                         console.log(data);
-                        var circle = g.datum(data).selectAll("path.arc")
+                        pieChart = g.datum(data).selectAll("path.arc")
                                         .data(pie)
                                         .enter()
                                         .append("path")
+                                        .attr("class", "pie-arc")
                                         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
                                         .attr("fill", function(d, i) { return color(i); })
                                         .attr("d", arc)
                                         .each(function(d) { this._current = d; });
+                        pieChart.transition().delay(250).duration(100).style("opacity", "1");
                     });
                 }
             });
