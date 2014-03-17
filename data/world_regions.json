@@ -1,0 +1,335 @@
+{
+"world-regions": [
+    {
+        "region": "World",
+        "total": 5498,
+        "trafficType": {
+            "internal": 1708,
+            "international": 3531,
+            "both": 35,
+            "unknown": 224
+        },
+        "exploitationType": {
+            "sexual": 1507,
+            "forcedLabour": 2906,
+            "combined": 266,
+            "begging": 279,
+            "other": 379,
+            "forcedLabourAndOther": 21,
+            "lowLevel": 1,
+            "unknown": 139
+        },
+        "genderVictim": {
+            "male": 2040,
+            "female": 3415
+        },
+        "ageVictim": {
+            "under18": 1987,
+            "over18": 3404
+        }
+    },
+    {
+        "region": "Africa",
+        "countries": [  "Angola",
+                        "Burkina Faso",
+                        "Burundi",
+                        "Cameroon",
+                        "Chad",
+                        "Congo",
+                        "Djibouti",
+                        "Ethiopia",
+                        "Eritrea",
+                        "Gambia",
+                        "Ghana",
+                        "Kenya",
+                        "Lesotho",
+                        "Liberia",
+                        "Libya",
+                        "Madagascar",
+                        "Malawi",
+                        "Mali",
+                        "Mauritius",
+                        "Mozambique",
+                        "Nigeria",
+                        "Rwanda",
+                        "Senegal",
+                        "Somalia",
+                        "South Africa",
+                        "Sudan",
+                        "Swaziland",
+                        "Tanzania",
+                        "Uganda",
+                        "Zambia",
+                        "Zimbabwe" ],
+        "total": 303,
+        "trafficType": {
+            "internal": 83,
+            "international": 175,
+            "both": 32,
+            "unknown": 13
+        },
+        "exploitationType": {
+            "sexual": 40,
+            "forcedLabour": 124,
+            "combined": 5,
+            "begging": 20,
+            "other": 57,
+            "forcedLabourAndOther": 5,
+            "lowLevel": 0,
+            "unknown": 52
+        },
+        "genderVictim": {
+            "male": 141,
+            "female": 162
+        },
+        "ageVictim": {
+            "under18": 147,
+            "over18": 155
+        }
+    },
+    {
+        "region": "South & Central Asia",
+        "countries": [  "Afghanistan",
+                        "Bangladesh",
+                        "India",
+                        "Kazakhstan",
+                        "Kyrgyzstan",
+                        "Mongolia",
+                        "Nepal",
+                        "Pakistan",
+                        "Sri Lanka",
+                        "Tajikistan",
+                        "Turkmenistan",
+                        "Uzbekistan" ],
+        "total": 1049,
+        "trafficType": {
+            "internal": 372,
+            "international": 632,
+            "both": 0,
+            "unknown": 45
+        },
+        "exploitationType": {
+            "sexual": 322,
+            "forcedLabour": 503,
+            "combined": 129,
+            "begging": 1,
+            "other": 29,
+            "forcedLabourAndOther": 14,
+            "lowLevel": 0,
+            "unknown": 51
+        },
+        "genderVictim": {
+            "male": 377,
+            "female": 672
+        },
+        "ageVictim": {
+            "under18": 209,
+            "over18": 839
+        }
+    },
+    {
+        "region": "East Asia & Pacific",
+        "countries": [  "Burma / Myanmar",
+                        "Cambodia",
+                        "China",
+                        "Indonesia",
+                        "Japan",
+                        "Kiribati",
+                        "Laos",
+                        "Malaysia",
+                        "Philippines",
+                        "Singapore",
+                        "Thailand",
+                        "Timor Leste",
+                        "Vietnam" ],
+        "total": 860,
+        "trafficType": {
+            "internal": 4,
+            "international": 856,
+            "both": 0,
+            "unknown": 0
+        },
+        "exploitationType": {
+            "sexual": 310,
+            "forcedLabour": 439,
+            "combined": 19,
+            "begging": 25,
+            "other": 64,
+            "forcedLabourAndOther": 0,
+            "lowLevel": 0,
+            "unknown": 3
+        },
+        "genderVictim": {
+            "male": 245,
+            "female": 615
+        },
+        "ageVictim": {
+            "under18": 356,
+            "over18": 504
+        }
+    },
+    {
+        "region": "Europe",
+        "countries": [  "Albania",
+                        "Austria",
+                        "Azerbaijan",
+                        "Belarus",
+                        "Belgium",
+                        "Bosnia & Herzegovina",
+                        "Bulgaria",
+                        "Czech Republic",
+                        "Cyprus",
+                        "Denmark",
+                        "Estonia",
+                        "Finland",
+                        "France",
+                        "Georgia",
+                        "Germany",
+                        "Greece",
+                        "Hungary",
+                        "Ireland",
+                        "Italy",
+                        "Kosovo",
+                        "Latvia",
+                        "Lithuania",
+                        "Macedonia",
+                        "Moldova",
+                        "Montenegro",
+                        "Netherlands",
+                        "Norway",
+                        "Poland",
+                        "Portugal",
+                        "Romania",
+                        "Russian Federation",
+                        "Serbia",
+                        "Slovakia",
+                        "Slovenia",
+                        "Spain",
+                        "Sweden",
+                        "Switzerland",
+                        "Turkey",
+                        "United Kingdom",
+                        "Ukraine" ],
+        "total": 1606,
+        "trafficType": {
+            "internal": 180,
+            "international": 1266,
+            "both": 3,
+            "unknown": 157
+        },
+        "exploitationType": {
+            "sexual": 635,
+            "forcedLabour": 772,
+            "combined": 52,
+            "begging": 36,
+            "other": 87,
+            "forcedLabourAndOther": 0,
+            "lowLevel": 1,
+            "unknown": 23
+        },
+        "genderVictim": {
+            "male": 562,
+            "female": 1010
+        },
+        "ageVictim": {
+            "under18": 198,
+            "over18": 1315
+        }
+    },
+    {
+        "region": "Near East",
+        "countries": [  "Egpyt",
+                        "Iran",
+                        "Iraq",
+                        "Jordan",
+                        "LeLebanon",
+                        "Morocco",
+                        "Syria",
+                        "Yemen",
+                        "United Arab Emirates",
+                        "Lebanon",
+                        "Israel",
+                        "Saudi Arabia" ],
+        "total": 696,
+        "trafficType": {
+            "internal": 382,
+            "international": 305,
+            "both": 0,
+            "unknown": 9
+        },
+        "exploitationType": {
+            "sexual": 101,
+            "forcedLabour": 286,
+            "combined": 7,
+            "begging": 154,
+            "other": 139,
+            "forcedLabourAndOther": 0,
+            "lowLevel": 0,
+            "unknown": 9
+        },
+        "genderVictim": {
+            "male": 304,
+            "female": 383
+        },
+        "ageVictim": {
+            "under18": 279,
+            "over18": 408
+        }
+    },
+    {
+        "region": "Western Hemisphere",
+        "countries": [  "Argentina",
+                        "Bolivia",
+                        "Chile",
+                        "Colombia",
+                        "Costa Rica",
+                        "Dominica",
+                        "Dominican Republic",
+                        "Ecuador",
+                        "El Salvador",
+                        "Guatemala",
+                        "Haiti",
+                        "Mexico",
+                        "Nicaragua",
+                        "Peru",
+                        "Caribbean",
+                        "USA",
+                        "Canada",
+                        "Brazil",
+                        "Jamaica",
+                        "Honduras",
+                        "Paraguay",
+                        "Antigua & Barbuda",
+                        "Belize",
+                        "Panama",
+                        "Trinidad and Tobego",
+                        "Guyana",
+                        "Venezuela" ],
+        "total": 984,
+        "trafficType": {
+            "internal": 687,
+            "international": 297,
+            "both": 0,
+            "unknown": 0
+        },
+        "exploitationType": {
+            "sexual": 99,
+            "forcedLabour": 782,
+            "combined": 54,
+            "begging": 43,
+            "other": 3,
+            "forcedLabourAndOther": 2,
+            "lowLevel": 0,
+            "unknown": 1
+        },
+        "genderVictim": {
+            "male": 411,
+            "female": 573
+        },
+        "ageVictim": {
+            "under18": 798,
+            "over18": 183
+        }
+    }]
+}
+
