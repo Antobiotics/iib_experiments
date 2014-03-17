@@ -1,7 +1,8 @@
 {
-"world-regions": [
+"worldRegions": [
     {
-        "region": "World",
+        "name": "World",
+        "countries": ["lots"],
         "total": 5498,
         "trafficType": {
             "internal": 1708,
@@ -29,7 +30,7 @@
         }
     },
     {
-        "region": "Africa",
+        "name": "Africa",
         "countries": [  "Angola",
                         "Burkina Faso",
                         "Burundi",
@@ -88,7 +89,7 @@
         }
     },
     {
-        "region": "South & Central Asia",
+        "name": "South & Central Asia",
         "countries": [  "Afghanistan",
                         "Bangladesh",
                         "India",
@@ -128,7 +129,7 @@
         }
     },
     {
-        "region": "East Asia & Pacific",
+        "name": "East Asia & Pacific",
         "countries": [  "Burma / Myanmar",
                         "Cambodia",
                         "China",
@@ -169,7 +170,7 @@
         }
     },
     {
-        "region": "Europe",
+        "name": "Europe",
         "countries": [  "Albania",
                         "Austria",
                         "Azerbaijan",
@@ -237,7 +238,7 @@
         }
     },
     {
-        "region": "Near East",
+        "name": "Near East",
         "countries": [  "Egpyt",
                         "Iran",
                         "Iraq",
@@ -277,7 +278,7 @@
         }
     },
     {
-        "region": "Western Hemisphere",
+        "name": "Western Hemisphere",
         "countries": [  "Argentina",
                         "Bolivia",
                         "Chile",

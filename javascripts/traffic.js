@@ -108,7 +108,7 @@ d3.json(worldMapDataPath, function(error, world) {
         .enter().insert('path', '.graticule')
         .attr('class', 'country')
         .attr('d', path)
-        .on('click', focusOnCountry)
+        .on('click', focusOnRegion)
         .on('dblclick', focusOnRegion)
         .on('mouseover', openCountryDescription)
         .on('mouseout', closeCountryDescription);
@@ -120,7 +120,7 @@ d3.json(worldMapDataPath, function(error, world) {
 
     function rankingBars() {
         d3.json(worldRegionsDataPath, function(error, data) {
-            console.log(data);
+
         });
     }
 
@@ -165,7 +165,6 @@ d3.json(worldMapDataPath, function(error, world) {
         } else {
             htmlInfo = '<p>' + 'No human traffic data available for: ' + c.id + '</p>';
         }
-        console.log(htmlInfo);
         tooltip.html(htmlInfo);
     }
 
@@ -221,8 +220,20 @@ d3.json(worldMapDataPath, function(error, world) {
 //-------------------------------------------------------------------------------
 // Double Click to focus on a world region:
     function focusOnRegion(c) {
-
-
+        d3.json(worldRegionsDataPath, function(error, data) {
+            // For a country get the correspoding region: TODO: do not repeat your self
+            var region;
+            for(var i = 0; i < data.worldRegions.length; i++) {
+                var regionDesc = data.worldRegions[i];
+                for(var cCount = 0; cCount < regionDesc.countries.length; cCount++) {
+                    if(regionDesc.countries[cCount] == c.id) {
+                        console.log(regionDesc.countries[cCount] + ' ' + 
+                                    data.worldRegions[i].name);
+                        region = data.worldRegions[i].name;
+                    }
+                }
+            }
+        });
     }
 
 //-------------------------------------------------------------------------------
@@ -265,7 +276,7 @@ d3.json(worldMapDataPath, function(error, world) {
     }
 
 //-------------------------------------------------------------------------------
-// Interpolator Class:
+// Pie appearance and transition callback:
     function managePieTransitions(c) {
         // Show details: a Pie chart of fake data for now
         if(centered) {
@@ -295,55 +306,6 @@ d3.json(worldMapDataPath, function(error, world) {
 
 }); // Main End
 
-//-------------------------------------------------------------------------------
-// Interpolator Class:
-function d3_geo_greatArcInterpolator() {
-var x0, y0, cy0, sy0, kx0, ky0,
-    x1, y1, cy1, sy1, kx1, ky1,
-    d,
-    k;
 
-    function interpolate(t) {
-        var B = Math.sin(t *= d) * k,
-            A = Math.sin(d - t) * k,
-            x = A * kx0 + B * kx1,
-            y = A * ky0 + B * ky1,
-            z = A * sy0 + B * sy1;
-        return [
-        Math.atan2(y, x) / d3_radians,
-        Math.atan2(z, Math.sqrt(x * x + y * y)) / d3_radians
-        ];
-    }
-
-    interpolate.distance = function() {
-        if (d == null) k = 1 / Math.sin(d = Math.acos(Math.max(-1, Math.min(1, sy0 * sy1 + cy0 * cy1 * Math.cos(x1 - x0)))));
-        return d;
-    };
-
-    interpolate.source = function(_) {
-        var cx0 = Math.cos(x0 = _[0] * d3_radians),
-            sx0 = Math.sin(x0);
-        cy0 = Math.cos(y0 = _[1] * d3_radians);
-        sy0 = Math.sin(y0);
-        kx0 = cy0 * cx0;
-        ky0 = cy0 * sx0;
-        d = null;
-        return interpolate;
-    };
-
-    interpolate.target = function(_) {
-        var cx1 = Math.cos(x1 = _[0] * d3_radians),
-            sx1 = Math.sin(x1);
-        cy1 = Math.cos(y1 = _[1] * d3_radians);
-        sy1 = Math.sin(y1);
-        kx1 = cy1 * cx1;
-        ky1 = cy1 * sx1;
-        d = null;
-        return interpolate;
-    };
-
-    return interpolate;
-}
-//-------------------------------------------------------------------------------
 
 
