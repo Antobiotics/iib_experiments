@@ -26,7 +26,7 @@ var rotate = d3_geo_greatArcInterpolator();
 
 //-------------------------------------------------------------------------------
 // Graph and SVG objects:
-var svg = d3.select("body").append("svg")
+var svg = d3.select(".wrapper").append("svg")
     .attr("width", width)
     .attr("height", height);
 
