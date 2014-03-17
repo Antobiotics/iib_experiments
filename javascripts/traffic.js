@@ -102,7 +102,6 @@ d3.json(worldMapDataPath, function(error, world) {
     
     // Loading the Map:
     var countries = topojson.object(world, world.objects.countries).geometries;
-
     var country = g.selectAll('.country')
         .data(countries)
         .enter().insert('path', '.graticule')
@@ -217,21 +216,51 @@ d3.json(worldMapDataPath, function(error, world) {
                     };
             });
     }
+
 //-------------------------------------------------------------------------------
 // Double Click to focus on a world region:
     function focusOnRegion(c) {
         d3.json(worldRegionsDataPath, function(error, data) {
             // For a country get the correspoding region: TODO: do not repeat your self
+            // The database is not cured for that so this piece of code is really disgusting, not time for that now.
             var region;
+            var regionCentroid;
             for(var i = 0; i < data.worldRegions.length; i++) {
                 var regionDesc = data.worldRegions[i];
                 for(var cCount = 0; cCount < regionDesc.countries.length; cCount++) {
                     if(regionDesc.countries[cCount] == c.id) {
-                        console.log(regionDesc.countries[cCount] + ' ' + 
-                                    data.worldRegions[i].name);
                         region = data.worldRegions[i].name;
+                        regionCentroid = data.worldRegions[i].centroid;
+                        break;
                     }
                 }
+            }
+            var centroidCountry;
+            for(var k = 0; k < countries.length; k++) {
+                if(countries[k].id == regionCentroid) {
+                    console.log(countries[k].id);
+                    centroidCountry = countries[k];
+                    break;
+                }
+            }
+
+            if(centroidCountry) {
+                title.text(region);
+                // Rotate to the centroid country o the corresponding region:
+                d3.transition()
+                    .delay(100)
+                    .duration(1250)
+                    .tween('rotate', function() {
+                        var targetPoint = centroid(centroidCountry);
+                        rotate.source(projection.rotate()).target([-targetPoint[0], -targetPoint[1]]).distance();
+                        return function(t) {
+                                projection.rotate(rotate(t));
+                                country.attr('d', path);
+                                line.attr('d', path);
+                                tooltipLine.attr('x1', path.centroid(centroidCountry)[0])
+                                        .attr('y1', path.centroid(centroidCountry)[1]);
+                        };
+                    });
             }
         });
     }

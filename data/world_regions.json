@@ -62,6 +62,7 @@
                         "Uganda",
                         "Zambia",
                         "Zimbabwe" ],
+        "centroid": "Central African Rep.",
         "total": 303,
         "trafficType": {
             "internal": 83,
@@ -102,6 +103,7 @@
                         "Tajikistan",
                         "Turkmenistan",
                         "Uzbekistan" ],
+        "centroid": "Pakistan",
         "total": 1049,
         "trafficType": {
             "internal": 372,
@@ -143,6 +145,7 @@
                         "Thailand",
                         "Timor Leste",
                         "Vietnam" ],
+        "centroid": "Philippines",
         "total": 860,
         "trafficType": {
             "internal": 4,
@@ -211,6 +214,7 @@
                         "Turkey",
                         "United Kingdom",
                         "Ukraine" ],
+        "centroid": "Slovakia",
         "total": 1606,
         "trafficType": {
             "internal": 180,
@@ -251,6 +255,7 @@
                         "Lebanon",
                         "Israel",
                         "Saudi Arabia" ],
+        "centroid": "Iraq",
         "total": 696,
         "trafficType": {
             "internal": 382,
@@ -306,6 +311,7 @@
                         "Trinidad and Tobego",
                         "Guyana",
                         "Venezuela" ],
+        "centroid": "Panama",
         "total": 984,
         "trafficType": {
             "internal": 687,
