@@ -80,8 +80,11 @@ var automaticMode = 0;
 var centered;
 
 var tip = d3.tip()
-            .attr('d3-tip')
-
+            .attr('class', 'd3-tip')
+            .html(function(d) {
+                return "<strong>Frequency:</strong> <span style='color:red'>" + "some texxxxt !!" + "</span>";
+            });
+svg.call(tip);
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
 d3.json(worldMapDataPath, function(error, world) {
@@ -112,12 +115,12 @@ d3.json(worldMapDataPath, function(error, world) {
                                     for(var dataI = 0; dataI < data.length; dataI++) {
                                         if(data[dataI].country == countries[j].id) {
                                             var opacity = d3.scale.linear()
-                                                            .domain([0, 835])
-                                                            .range([0.4, 1]);
+                                                            .domain([10, 835])
+                                                            .range([0.55, 1]);
                                             return opacity(data[dataI].total);
                                         }
                                     }
-                                    return 0.4;
+                                    return 0.2;
                                 });
         });
     }
@@ -136,6 +139,7 @@ d3.json(worldMapDataPath, function(error, world) {
         var countryInfo = getDataForCountry(c);
         if(countryInfo != null) {
             console.log(countryInfo);
+            tip.show();
         }
     }
 
@@ -143,6 +147,7 @@ d3.json(worldMapDataPath, function(error, world) {
         tooltipLine.transition()
                    .duration(500)
                    .style('opacity', 0);
+        tip.hide();
     }
 //-------------------------------------------------------------------------------
 // Get Data for Country: return the data corresponding to the country c
