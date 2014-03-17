@@ -52,6 +52,7 @@ var title = g.append("text")
 var pieRadius = 100;
 var pieChart = undefined;
 
+var tooltipLine;
 //---------------------------------------------------------------------------------
 // DataBase variables:
 // TODO: Adapt for real data (I keep it as example for later)
@@ -69,8 +70,6 @@ function typeHT(d) {
   return d;
 }
 
-var humanFactorData;
-
 //-------------------------------------------------------------------------------
 // Utility Globals:
 var color = d3.scale.category10();
@@ -79,9 +78,7 @@ var d3_radians = Math.PI / 180;
 
 var automaticMode = 0;
 var centered;
-    var div = d3.select('body').append('div')
-                               .attr('class', 'tooltip')
-                               .style('opacity', 0);
+
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
 d3.json(worldMapDataPath, function(error, world) {
@@ -122,7 +119,6 @@ d3.json(worldMapDataPath, function(error, world) {
         });
     }
     
-    var tooltipLine;
     function openCountryDescription(c) {
         tooltipLine = g.append('line')
                         .style('stroke', 'black')
@@ -158,7 +154,6 @@ d3.json(worldMapDataPath, function(error, world) {
             return null;
         });
     }
-
 
 //-------------------------------------------------------------------------------
 // Country click to Focus callback:
