@@ -72,6 +72,7 @@ var currentCountryInfo;
 // TODO: Adapt for real data (I keep it as example for later)
 
 humanFactorDataPath = 'data/global.csv';
+worldRegionsDataPath= 'data/worl_regions.json';
 worldMapDataPath = 'data/readme-world-110m.json';
 
 function type(d) {
