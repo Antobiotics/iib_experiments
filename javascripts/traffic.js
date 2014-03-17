@@ -1,7 +1,15 @@
 //-------------------------------------------------------------------------------
 // Global Definitions:
-var width = 960,
-    height = 500;
+var width  = window.innerWidth,
+    height = window.innerHeight;
+
+//-------------------------------------------------------------------------------
+// Graph and SVG objects:
+var svg = d3.select('.wrapper').append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+var g = svg.append('g');
 
 //-------------------------------------------------------------------------------
 // World Map globals:
@@ -11,26 +19,18 @@ var centroid = d3.geo.path()
 
 var projection = d3.geo.orthographic()
     .scale(248)
-    .clipAngle(90);
+    .clipAngle(90)
+    .translate([width / 2 , height / 2]);
 
 // The borders: ?
 var path = d3.geo.path()
     .projection(projection);
 
-var graticule = d3.geo.graticule()
-    .extent([[-180, -90], [180 - .1, 90 - .1]]);
+var graticule = d3.geo.graticule();
 
 //-------------------------------------------------------------------------------
 // Motion Globals:
 var rotate = d3_geo_greatArcInterpolator();
-
-//-------------------------------------------------------------------------------
-// Graph and SVG objects:
-var svg = d3.select('.wrapper').append('svg')
-    .attr('width', width)
-    .attr('height', height);
-
-var g = svg.append('g');
 
 //-------------------------------------------------------------------------------
 // Single Variables:
@@ -83,8 +83,8 @@ var tip = d3.tip()
             .attr('class', 'd3-tip')
             .html(function(d) {
                 return "<strong>Frequency:</strong> <span style='color:red'>" + "some texxxxt !!" + "</span>";
-            });
-svg.call(tip);
+            })
+//g.call(tip);
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
 d3.json(worldMapDataPath, function(error, world) {
@@ -99,6 +99,7 @@ d3.json(worldMapDataPath, function(error, world) {
         .enter().insert('path', '.graticule')
         .attr('class', 'country')
         .attr('d', path)
+        .call(tip)
         .on('click', countryFocus)
         .on('dblclick', countryFocusAndDetails)
         .on('mouseover', openCountryDescription)
