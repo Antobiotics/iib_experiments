@@ -65,7 +65,7 @@ var tooltip = d3.select('.wrapper')
                 .style('z-index', '10')
                 .style('visibility', 'visible')
                 .style('left', tooltipOffset[0] + 'px')
-                .style('top', tooltipOffset[1] + 'px' );
+                .style('top', tooltipOffset[1] - 20 + 'px' );
 var currentCountryInfo;
 //---------------------------------------------------------------------------------
 // DataBase variables:
@@ -143,11 +143,15 @@ d3.json(worldMapDataPath, function(error, world) {
                    .duration(100)
                    .style('opacity', 0.9);
         
-        getDataForCountry(c, updateCurrentCountryInfo);
+        getDataForCountry(c, function(info) { currentCountryInfo = info; });
         if(currentCountryInfo) {
-            console.log(currentCountryInfo);
-            console.log('<p>' + currentCountryInfo.country +'</p>');
-            tooltip.html('<p>' + currentCountryInfo.country +'</p>');
+            var htmlInfo = '<p>' + currentCountryInfo.country +'</p>'
+            for(var attribute in currentCountryInfo) {
+                var infoString = '<br>' + '<p>' + attribute + ': ' + currentCountryInfo[attribute] + '</p>';
+                htmlInfo = htmlInfo.concat(infoString);
+            }
+            console.log(htmlInfo);
+            tooltip.html(htmlInfo);
         }
     }
 
@@ -157,10 +161,7 @@ d3.json(worldMapDataPath, function(error, world) {
                    .style('opacity', 0);
     }
 
-    function updateCurrentCountryInfo(info) {
-        console.log(info.country);
-        currentCountryInfo = info;
-    }
+
 
 //-------------------------------------------------------------------------------
 // Get Data for Country: return the data corresponding to the country c
