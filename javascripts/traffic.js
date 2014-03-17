@@ -5,12 +5,14 @@ var width  = window.innerWidth,
 
 var margin = {top: 0, right: 0, bottom: 0, left: 0};
 var offset = [2 * width / 5, height / 2];
+var tooltipOffset = [ 3 * width / 5, height / 6];
 
 //-------------------------------------------------------------------------------
 // Graph and SVG objects:
 var svg = d3.select('.wrapper').append('svg')
     .attr('width', width)
-    .attr('height', height);
+    .attr('height', height)
+    .attr('z-index', '-1');
 
 var g = svg.append('g');
 
@@ -56,6 +58,14 @@ var pieRadius = 100;
 var pieChart = undefined;
 
 var tooltipLine;
+var tooltip = d3.select('.wrapper')
+                .append('div')
+                .style('position', 'absolute')
+                .style('z-index', '10')
+                .style('visibility', 'visible')
+                .style('left', tooltipOffset[0] + 'px')
+                .style('top', tooltipOffset[1] + 'px' )
+                .html('<h2>tool fuking tip !!!!!!!</h2>');
 //---------------------------------------------------------------------------------
 // DataBase variables:
 // TODO: Adapt for real data (I keep it as example for later)
@@ -82,12 +92,6 @@ var d3_radians = Math.PI / 180;
 var automaticMode = 0;
 var centered;
 
-var tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .html(function(d) {
-                return "<strong>Frequency:</strong> <span style='color:red'>" + "some texxxxt !!" + "</span>";
-            })
-//g.call(tip);
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
 d3.json(worldMapDataPath, function(error, world) {
@@ -102,7 +106,6 @@ d3.json(worldMapDataPath, function(error, world) {
         .enter().insert('path', '.graticule')
         .attr('class', 'country')
         .attr('d', path)
-        .call(tip)
         .on('click', countryFocus)
         .on('dblclick', countryFocusAndDetails)
         .on('mouseover', openCountryDescription)
@@ -134,8 +137,8 @@ d3.json(worldMapDataPath, function(error, world) {
                         .style('stroke', 'black')
                         .attr('x1', path.centroid(c)[0])
                         .attr('y1', path.centroid(c)[1])
-                        .attr('x2', 780)
-                        .attr('y2', 20);
+                        .attr('x2', tooltipOffset[0])
+                        .attr('y2', tooltipOffset[1]);
         tooltipLine.transition()
                    .duration(100)
                    .style('opacity', 0.9);
@@ -143,7 +146,6 @@ d3.json(worldMapDataPath, function(error, world) {
         var countryInfo = getDataForCountry(c);
         if(countryInfo != null) {
             console.log(countryInfo);
-            tip.show();
         }
     }
 
@@ -151,7 +153,6 @@ d3.json(worldMapDataPath, function(error, world) {
         tooltipLine.transition()
                    .duration(500)
                    .style('opacity', 0);
-        tip.hide();
     }
 //-------------------------------------------------------------------------------
 // Get Data for Country: return the data corresponding to the country c
