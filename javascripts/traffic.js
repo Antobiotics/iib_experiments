@@ -60,12 +60,13 @@ var pieChart = undefined;
 var tooltipLine;
 var tooltip = d3.select('.wrapper')
                 .append('div')
+                .attr('class', 'tooltip')
                 .style('position', 'absolute')
                 .style('z-index', '10')
                 .style('visibility', 'visible')
                 .style('left', tooltipOffset[0] + 'px')
-                .style('top', tooltipOffset[1] + 'px' )
-                .html('<h2>tool fuking tip !!!!!!!</h2>');
+                .style('top', tooltipOffset[1] + 'px' );
+var currentCountryInfo;
 //---------------------------------------------------------------------------------
 // DataBase variables:
 // TODO: Adapt for real data (I keep it as example for later)
@@ -115,7 +116,6 @@ d3.json(worldMapDataPath, function(error, world) {
 
     function heatMap() {
         d3.csv(humanFactorDataPath, typeHT, function(error, data) {
-                console.log(data);
                 country.transition()
                        .style('fill', 'red')
                        .style('fill-opacity',function(d, j) {
@@ -143,9 +143,11 @@ d3.json(worldMapDataPath, function(error, world) {
                    .duration(100)
                    .style('opacity', 0.9);
         
-        var countryInfo = getDataForCountry(c);
-        if(countryInfo != null) {
-            console.log(countryInfo);
+        getDataForCountry(c, updateCurrentCountryInfo);
+        if(currentCountryInfo) {
+            console.log(currentCountryInfo);
+            console.log('<p>' + currentCountryInfo.country +'</p>');
+            tooltip.html('<p>' + currentCountryInfo.country +'</p>');
         }
     }
 
@@ -154,17 +156,21 @@ d3.json(worldMapDataPath, function(error, world) {
                    .duration(500)
                    .style('opacity', 0);
     }
+
+    function updateCurrentCountryInfo(info) {
+        console.log(info.country);
+        currentCountryInfo = info;
+    }
+
 //-------------------------------------------------------------------------------
 // Get Data for Country: return the data corresponding to the country c
-    function getDataForCountry(country) {
+    function getDataForCountry(country, updateCallback) {
         d3.csv(humanFactorDataPath, typeHT, function(error, data) {
             for(var i = 0; i < data.length; i++) {
                 if(data[i].country == country.id) {
-                    console.log(data[i]);
-                    return data[i];
+                    updateCallback(data[i]);
                 }
             }
-            return null;
         });
     }
 
