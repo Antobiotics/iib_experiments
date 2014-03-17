@@ -72,7 +72,7 @@ var currentCountryInfo;
 // TODO: Adapt for real data (I keep it as example for later)
 
 humanFactorDataPath = 'data/global.csv';
-worldRegionsDataPath= 'data/worl_regions.json';
+worldRegionsDataPath= 'data/world_regions.json';
 worldMapDataPath = 'data/readme-world-110m.json';
 
 function type(d) {
@@ -108,12 +108,21 @@ d3.json(worldMapDataPath, function(error, world) {
         .enter().insert('path', '.graticule')
         .attr('class', 'country')
         .attr('d', path)
-        .on('click', countryFocus)
-        .on('dblclick', countryFocusAndDetails)
+        .on('click', focusOnCountry)
+        .on('dblclick', focusOnRegion)
         .on('mouseover', openCountryDescription)
         .on('mouseout', closeCountryDescription);
     
     heatMap();
+    
+    // Create Ranking bars:
+    rankingBars();
+
+    function rankingBars() {
+        d3.json(worldRegionsDataPath, function(error, data) {
+            console.log(data);
+        });
+    }
 
     function heatMap() {
         d3.csv(humanFactorDataPath, typeHT, function(error, data) {
@@ -144,16 +153,20 @@ d3.json(worldMapDataPath, function(error, world) {
                    .duration(100)
                    .style('opacity', 0.9);
         
+        currentCountryInfo = undefined;
         getDataForCountry(c, function(info) { currentCountryInfo = info; });
+        var htmlInfo;
         if(currentCountryInfo) {
-            var htmlInfo = '<p>' + currentCountryInfo.country +'</p>'
+            htmlInfo = '<p>' + currentCountryInfo.country +'</p>'
             for(var attribute in currentCountryInfo) {
                 var infoString = '<br>' + '<p>' + attribute + ': ' + currentCountryInfo[attribute] + '</p>';
                 htmlInfo = htmlInfo.concat(infoString);
             }
-            console.log(htmlInfo);
-            tooltip.html(htmlInfo);
+        } else {
+            htmlInfo = '<p>' + 'No human traffic data available for: ' + c.id + '</p>';
         }
+        console.log(htmlInfo);
+        tooltip.html(htmlInfo);
     }
 
     function closeCountryDescription(c) {
@@ -161,8 +174,6 @@ d3.json(worldMapDataPath, function(error, world) {
                    .duration(500)
                    .style('opacity', 0);
     }
-
-
 
 //-------------------------------------------------------------------------------
 // Get Data for Country: return the data corresponding to the country c
@@ -178,7 +189,7 @@ d3.json(worldMapDataPath, function(error, world) {
 
 //-------------------------------------------------------------------------------
 // Country click to Focus callback:
-    function countryFocus(c) {
+    function focusOnCountry(c) {
         console.log('clicked on:' + c.id);
 
         title.text(c.id);
@@ -206,6 +217,12 @@ d3.json(worldMapDataPath, function(error, world) {
                                    .attr('y1', path.centroid(c)[1]);
                     };
             });
+    }
+//-------------------------------------------------------------------------------
+// Double Click to focus on a world region:
+    function focusOnRegion(c) {
+
+
     }
 
 //-------------------------------------------------------------------------------
