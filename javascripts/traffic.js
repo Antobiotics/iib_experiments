@@ -33,7 +33,7 @@ var svg = d3.select(".wrapper").append("svg")
 var g = svg.append("g");
 
 //-------------------------------------------------------------------------------
-// Single Objects:
+// Single Variables:
 var line = g.append("path")
     .datum(graticule)
     .attr("class", "graticule")
@@ -52,7 +52,13 @@ var title = g.append("text")
 var pieRadius = 100;
 var pieChart = undefined;
 
-// TODO: Adapt for real data
+//---------------------------------------------------------------------------------
+// DataBase variables:
+// TODO: Adapt for real data (I keep it as example for later)
+
+humanFactorDataPath = "data/global.csv";
+worldMapDataPath = "data/readme-world-110m.json";
+
 function type(d) {
   d.apples = +d.apples || 0;
   d.oranges = +d.oranges || 0;
@@ -62,6 +68,9 @@ function type(d) {
 function typeHT(d) {
   return d;
 }
+
+var humanFactorData;
+
 //-------------------------------------------------------------------------------
 // Utility Globals:
 var color = d3.scale.category10();
@@ -75,7 +84,7 @@ var centered;
                                .style('opacity', 0);
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
-d3.json("data/readme-world-110m.json", function(error, world) {
+d3.json(worldMapDataPath, function(error, world) {
 
     var zoomFactor = 1;
     
@@ -94,17 +103,14 @@ d3.json("data/readme-world-110m.json", function(error, world) {
     
     heatMap();
 
-
     function heatMap() {
-        d3.csv("data/global.csv", typeHT, function(error, data) {
+        d3.csv(humanFactorDataPath, typeHT, function(error, data) {
                 console.log(data);
                 country.transition()
                        .style('fill', 'red')
-                       .style('fill-opacity',function(d, j) { 
-                                    console.log(d.country + d.total);
+                       .style('fill-opacity',function(d, j) {
                                     for(var dataI = 0; dataI < data.length; dataI++) {
                                         if(data[dataI].country == countries[j].id) {
-                                            console.log(data[dataI].country + " " + countries[j].id);
                                             var opacity = d3.scale.linear()
                                                             .domain([0, 835])
                                                             .range([0.4, 1]);
@@ -127,21 +133,11 @@ d3.json("data/readme-world-110m.json", function(error, world) {
         tooltipLine.transition()
                    .duration(100)
                    .style('opacity', 0.9);
-
-        g.append('foreignObject')
-            .attr('width', 300)
-            .attr('heigh', 100)
-            .append('xhtml:body')
-            .html("<h1>An HTML Foreign Object in SVG</h1><p>");
-        /*
-        div.transition()
-            .duration(200)
-            .style('opacity', .9);
-
-        div.html(formatTime('blah' + '<br/>')
-            .style('left', (300) + 'px')
-            .style('top', (300 - 28) + 'px'));
-            */
+        
+        var countryInfo = getDataForCountry(c);
+        if(countryInfo != null) {
+            console.log(countryInfo);
+        }
     }
 
     function closeCountryDescription(c) {
@@ -149,6 +145,20 @@ d3.json("data/readme-world-110m.json", function(error, world) {
                    .duration(500)
                    .style('opacity', 0);
     }
+//-------------------------------------------------------------------------------
+// Get Data for Country: return the data corresponding to the country c
+    function getDataForCountry(country) {
+        d3.csv(humanFactorDataPath, typeHT, function(error, data) {
+            for(var i = 0; i < data.length; i++) {
+                if(data[i].country == country.id) {
+                    console.log(data[i]);
+                    return data[i];
+                }
+            }
+            return null;
+        });
+    }
+
 
 //-------------------------------------------------------------------------------
 // Country click to Focus callback:
