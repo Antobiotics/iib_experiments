@@ -25,3 +25,10 @@ text {
     text-anchor: middle;
 }
 
+.tooltip {
+    line-weight: 1px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.8);
+    position: absolute;
+
+}

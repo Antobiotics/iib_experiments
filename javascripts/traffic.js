@@ -26,28 +26,28 @@ var rotate = d3_geo_greatArcInterpolator();
 
 //-------------------------------------------------------------------------------
 // Graph and SVG objects:
-var svg = d3.select(".wrapper").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+var svg = d3.select('.wrapper').append('svg')
+    .attr('width', width)
+    .attr('height', height);
 
-var g = svg.append("g");
+var g = svg.append('g');
 
 //-------------------------------------------------------------------------------
 // Single Variables:
-var line = g.append("path")
+var line = g.append('path')
     .datum(graticule)
-    .attr("class", "graticule")
-    .attr("d", path);
+    .attr('class', 'graticule')
+    .attr('d', path);
 
-var earth = g.append("circle")
-    .attr("class", "graticule-outline")
-    .attr("cx", width / 2)
-    .attr("cy", height / 2)
-    .attr("r", projection.scale());
+var earth = g.append('circle')
+    .attr('class', 'graticule-outline')
+    .attr('cx', width / 2)
+    .attr('cy', height / 2)
+    .attr('r', projection.scale());
 
-var title = g.append("text")
-    .attr("x", width / 2)
-    .attr("y", height * 3 / 5);
+var title = g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height * 3 / 5);
 
 var pieRadius = 100;
 var pieChart = undefined;
@@ -57,8 +57,8 @@ var tooltipLine;
 // DataBase variables:
 // TODO: Adapt for real data (I keep it as example for later)
 
-humanFactorDataPath = "data/global.csv";
-worldMapDataPath = "data/readme-world-110m.json";
+humanFactorDataPath = 'data/global.csv';
+worldMapDataPath = 'data/readme-world-110m.json';
 
 function type(d) {
   d.apples = +d.apples || 0;
@@ -79,6 +79,9 @@ var d3_radians = Math.PI / 180;
 var automaticMode = 0;
 var centered;
 
+var tip = d3.tip()
+            .attr('d3-tip')
+
 //-------------------------------------------------------------------------------
 // Main: Loads json data and apply tansitions
 d3.json(worldMapDataPath, function(error, world) {
@@ -88,11 +91,11 @@ d3.json(worldMapDataPath, function(error, world) {
     // Loading the Map:
     var countries = topojson.object(world, world.objects.countries).geometries;
 
-    var country = g.selectAll(".country")
+    var country = g.selectAll('.country')
         .data(countries)
-        .enter().insert("path", ".graticule")
-        .attr("class", "country")
-        .attr("d", path)
+        .enter().insert('path', '.graticule')
+        .attr('class', 'country')
+        .attr('d', path)
         .on('click', countryFocus)
         .on('dblclick', countryFocusAndDetails)
         .on('mouseover', openCountryDescription)
@@ -192,7 +195,7 @@ d3.json(worldMapDataPath, function(error, world) {
     function countryFocusAndDetails(c) {
         // Focus:
         if(pieChart != undefined) {
-            g.selectAll(".pie-arc").transition().style("opacity", "0");
+            g.selectAll('.pie-arc').transition().style('opacity', '0');
             pieChart = undefined;
         }
         countryFocus(c);
@@ -213,16 +216,16 @@ d3.json(worldMapDataPath, function(error, world) {
             zoomFactor = 1;
             centered = null;
         }
-        g.selectAll("path")
-            .classed("active", centered && function(d) { return d === centered; });
+        g.selectAll('path')
+            .classed('active', centered && function(d) { return d === centered; });
 
         g.transition()
             .duration(750)
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 +
-                                ")scale(" + zoomFactor +
-                                ")translate(" + -x + "," + -y + ")")
-            .style("stroke-width", 1.5 / zoomFactor + "px")
-            .each("end", managePieTransitions);
+            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 +
+                                ')scale(' + zoomFactor +
+                                ')translate(' + -x + ',' + -y + ')')
+            .style('stroke-width', 1.5 / zoomFactor + 'px')
+            .each('end', managePieTransitions);
 
     }
 
@@ -239,18 +242,18 @@ d3.json(worldMapDataPath, function(error, world) {
                         .innerRadius(0)
                         .outerRadius(pieRadius / zoomFactor);
 
-            d3.csv("data/fake_data.csv", type, function(error, data) {
+            d3.csv('data/fake_data.csv', type, function(error, data) {
                 console.log(data);
-                pieChart = g.datum(data).selectAll("path.arc")
+                pieChart = g.datum(data).selectAll('path.arc')
                                 .data(pie)
                                 .enter()
-                                .append("path")
-                                .attr("class", "pie-arc")
-                                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-                                .attr("fill", function(d, i) { return color(i); })
-                                .attr("d", arc)
+                                .append('path')
+                                .attr('class', 'pie-arc')
+                                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+                                .attr('fill', function(d, i) { return color(i); })
+                                .attr('d', arc)
                                 .each(function(d) { this._current = d; });
-                pieChart.transition().delay(250).duration(100).style("opacity", "1");
+                pieChart.transition().delay(250).duration(100).style('opacity', '1');
             });
         }
     }
