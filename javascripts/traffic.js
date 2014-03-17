@@ -3,6 +3,9 @@
 var width  = window.innerWidth,
     height = window.innerHeight;
 
+var margin = {top: 0, right: 0, bottom: 0, left: 0};
+var offset = [2 * width / 5, height / 2];
+
 //-------------------------------------------------------------------------------
 // Graph and SVG objects:
 var svg = d3.select('.wrapper').append('svg')
@@ -20,7 +23,7 @@ var centroid = d3.geo.path()
 var projection = d3.geo.orthographic()
     .scale(248)
     .clipAngle(90)
-    .translate([width / 2 , height / 2]);
+    .translate(offset);
 
 // The borders: ?
 var path = d3.geo.path()
@@ -41,12 +44,12 @@ var line = g.append('path')
 
 var earth = g.append('circle')
     .attr('class', 'graticule-outline')
-    .attr('cx', width / 2)
-    .attr('cy', height / 2)
+    .attr('cx', offset[0])
+    .attr('cy', offset[1])
     .attr('r', projection.scale());
 
 var title = g.append('text')
-    .attr('x', width / 2)
+    .attr('x', offset[0])
     .attr('y', height * 3 / 5);
 
 var pieRadius = 100;
@@ -212,13 +215,13 @@ d3.json(worldMapDataPath, function(error, world) {
         var point;
         if(c && centered != c) {
             point = centroid(c);
-            x = width / 2;
-            y = height / 2;
+            x = offset[0];
+            y = offset[1];
             zoomFactor = 4;
             centered = c;
         } else {
-            x = width  / 2;
-            y = height / 2;
+            x = offset[0];
+            y = offset[1];
             zoomFactor = 1;
             centered = null;
         }
@@ -227,9 +230,9 @@ d3.json(worldMapDataPath, function(error, world) {
 
         g.transition()
             .duration(750)
-            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 +
-                                ')scale(' + zoomFactor +
-                                ')translate(' + -x + ',' + -y + ')')
+            .attr('transform', 'translate(' + offset[0] + ',' + offset[1] + ')' + 
+                               'scale(' + zoomFactor + ')' +
+                               'translate(' + -x + ',' + -y + ')')
             .style('stroke-width', 1.5 / zoomFactor + 'px')
             .each('end', managePieTransitions);
 
@@ -255,7 +258,7 @@ d3.json(worldMapDataPath, function(error, world) {
                                 .enter()
                                 .append('path')
                                 .attr('class', 'pie-arc')
-                                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+                                .attr('transform', 'translate(' + offset[0] + ',' + offset[1] + ')')
                                 .attr('fill', function(d, i) { return color(i); })
                                 .attr('d', arc)
                                 .each(function(d) { this._current = d; });
